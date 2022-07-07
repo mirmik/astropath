@@ -1,84 +1,96 @@
 #include <doctest/doctest.h>
 
-#include <astropathy/observer.h>
 #include <astropathy/class.h>
 #include <astropathy/guard.h>
+#include <astropathy/observer.h>
 
-class A 
+class A
 {
 public:
-	int i = 0;
-	int j = 0;
+    int i = 0;
+    int j = 0;
 
 public:
-	void set_i(int i) 
-	{
-		this->i = i;
-		astropathy::update(this->i); 
-	}
+    void set_i(int i)
+    {
+        this->i = i;
+        astropathy::update(this->i);
+    }
 
-	void set_j(int j) 
-	{
-		this->j = j;
-		astropathy::update(this->j); 
-	}
+    void set_j(int j)
+    {
+        this->j = j;
+        astropathy::update(this->j);
+    }
 
-	A() 
-	{  
-		astropathy::constructor_invoked(this); 
-	}
-	
-	~A() 
-	{ 
-		astropathy::destructor_invoked(this); 
-	}
+    A()
+    {
+        astropathy::constructor_invoked(this);
+    }
+
+    ~A()
+    {
+        astropathy::destructor_invoked(this);
+    }
 };
 
-ASTROPATHY_CLASS(A)
-	.field("i", &A::i)
-	.field("j", &A::j);
-;
+ASTROPATHY_CLASS(A, cls)
+{
+    cls.field("i", &A::i);
+    cls.field("j", &A::j);
+}
 
-class B 
+class B
 {
 public:
-	int i = 0;
-	int j = 0;
-	astropathy::guard<B> _observer = {this};
+    int i = 0;
+    int j = 0;
+    astropathy::guard<B> _observer = {this};
 
 public:
-	void set_i(int i) 
-	{
-		this->i = i;
-		_observer.update(this->i); 
-	}
+    void set_i(int i)
+    {
+        this->i = i;
+        _observer.update(this->i);
+    }
 
-	void set_j(int j) 
-	{
-		this->j = j;
-		_observer.update(this->j); 
-	}
+    void set_j(int j)
+    {
+        this->j = j;
+        _observer.update(this->j);
+    }
 };
 
-ASTROPATHY_CLASS(B)
-	.field("i", &B::i)
-	.field("j", &B::j);
+ASTROPATHY_CLASS(B, cls)
+{
+    cls.field("i", &B::i);
+    cls.field("j", &B::j);
+}
 
+/*
 class C
 {
 public:
-	A a = {};
-	B b = {};
-	astropathy::guard<C> _observer = {this};
+    A a = {};
+    B b = {};
+    astropathy::guard<C> _observer = {this};
 };
 
-ASTROPATHY_CLASS(C)
-	.field("a", &C::a)
-	.field("b", &C::b);
-
-TEST_CASE("A") 
+ASTROPATHY_CLASS(C).field("a", &C::a).field("b", &C::b);
+*/
+TEST_CASE("A")
 {
-	A a;
-	B b;
-	C c;
+    A a;
+    // B b;
+    // C c;
+
+    for (auto &[clsname, cls] : astropathy::index::instance().classes())
+    {
+        nos::print(clsname, " ");
+        for (auto &[fldname, fld] : cls->fields())
+        {
+            nos::print(fldname, " ");
+        }
+        nos::println();
+    }
 }

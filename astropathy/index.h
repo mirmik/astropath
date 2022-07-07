@@ -25,7 +25,7 @@ namespace astropathy
         }
 
         void register_astropathy_class(std::string name,
-                                       astropathy::class_base &cls)
+                                       astropathy::class_base *cls)
         {
             _classes.emplace(name, cls);
         }

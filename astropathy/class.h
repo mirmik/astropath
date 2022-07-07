@@ -43,7 +43,7 @@ namespace astropathy
         class_()
         {
             auto &index = astropathy::index::instance();
-            index.register_astropathy_class(typeid(T).name(), *this);
+            index.register_astropathy_class(typeid(T).name(), this);
         }
 
     public:
